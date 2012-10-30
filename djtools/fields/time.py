@@ -10,6 +10,7 @@ class KungfuTimeField(forms.Field):
     """
     Extension to Django's time fields that parses a much larger range of times
     without explicitly needing to specify all the time formats yourself.
+    Author: Michael DiBernardo (mikedebo@gmail.com)
     """
 
     # Matches any string with a 24-hourish format (sans AM/PM) but puts no
