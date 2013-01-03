@@ -13,7 +13,7 @@ def send_mail(request, recipients, subject, femail, template, data, bcc=None):
     headers = {'Reply-To': femail,'From': femail,}
     email = EmailMessage(subject, t.render(c), femail, recipients, bcc, headers=headers)
     email.content_subtype = "html"
-    fail = True
+    fail = settings.EMAIL_FAIL_SILENTLY
     if settings.DEBUG:
         fail = False
     email.send(fail_silently=fail)
