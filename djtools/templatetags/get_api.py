@@ -24,8 +24,8 @@ class ApiObjectNode(Node):
                 obj = response.read()
             else:
                 obj = ""
-        except:
-            obj = ""
+        except Exception,e:
+            obj = str('<div style="display:none;">%s</div>' % e)
         context[self.context_var] = obj
         return ''
 
