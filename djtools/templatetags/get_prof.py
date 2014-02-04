@@ -25,10 +25,12 @@ class GetProf(template.Node):
         else:
             user = get_novell_username(email)
             earl = "http://www.carthage.edu/live/json/profiles/search/%s/" % user
-            data =  urllib2.urlopen(earl)
-            prof = json.load(data)
+            response =  urllib2.urlopen(earl)
+            data = response.read()
+            prof = json.loads(data)[0]
+            cache.set(key, prof)
 
-        context[self.varname] = prof[0]
+        context[self.varname] = prof
         return ''
 
 class DoGetProf:
