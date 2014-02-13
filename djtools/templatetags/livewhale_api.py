@@ -24,7 +24,7 @@ class GetContent(template.Node):
             earl = "http://www.carthage.edu/live/%s/%s@JSON" % (self.ctype,self.cid)
             response =  urllib2.urlopen(earl)
             data = response.read()
-            content = json.loads(data)[0]
+            content = json.loads(data)
             cache.set(key, content)
 
         context[self.varname] = content
@@ -46,4 +46,4 @@ class DoGetLiveWhaleContent:
             raise template.TemplateSyntaxError, "First argument to '%s' tag must be 'as'" % bits[0]
         return GetContent(bits)
 
-register.tag('get_lw_content', DoGetProf('get_lw_content'))
+register.tag('get_lw_content', DoGetLiveWhaleContent('get_lw_content'))
