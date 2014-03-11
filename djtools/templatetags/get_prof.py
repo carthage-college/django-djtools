@@ -27,8 +27,11 @@ class GetProf(template.Node):
             earl = "http://www.carthage.edu/live/json/profiles/search/%s/" % user
             response =  urllib2.urlopen(earl)
             data = response.read()
-            prof = json.loads(data)[0]
-            cache.set(key, prof)
+            try:
+                prof = json.loads(data)[0]
+                cache.set(key, prof)
+            except:
+                prof = None
 
         context[self.varname] = prof
         return ''
