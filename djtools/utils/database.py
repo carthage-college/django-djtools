@@ -7,7 +7,7 @@ def mysql_db(sql):
     us = settings.DATABASES['livewhale']['USER']
     ps = settings.DATABASES['livewhale']['PASSWORD']
     db = settings.DATABASES['livewhale']['NAME']
-    conn  = MySQLdb.connect(host=hs,user=us,passwd=ps,db=db)
+    conn  = MySQLdb.connect(host=hs,user=us,passwd=ps,db=db,use_unicode=True,charset="utf8")
     curr = conn.cursor()
     curr.execute(sql)
     conn.commit()
