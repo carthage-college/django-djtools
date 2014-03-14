@@ -19,5 +19,6 @@ def send_mail(request, recipients, subject, femail, template, data, bcc=None):
     fail = settings.EMAIL_FAIL_SILENTLY
     if settings.DEBUG:
         fail = False
-    email.send(fail_silently=fail)
+    #email.send(fail_silently=fail)
+    email.send(fail_silently=True)
 
