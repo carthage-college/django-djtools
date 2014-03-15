@@ -38,7 +38,7 @@ class GetProf(template.Node):
 
 class DoGetProf:
     """
-    {% get_prof as variable_name email_address %}
+    {% get_prof as variable_name email_address [or] username %}
     """
 
     def __init__(self, tag_name):
