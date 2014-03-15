@@ -1,10 +1,6 @@
 from django.template.defaultfilters import stringfilter
 from django.utils.encoding import smart_unicode, smart_text
 from django import template
-<<<<<<< HEAD
-=======
-#from django.utils.encoding import smart_text
->>>>>>> c6ae9ca2cf817d9aafee8d3bf17616b82b8f5790
 
 # translation mapping table that converts
 # single smart quote characters to standard
