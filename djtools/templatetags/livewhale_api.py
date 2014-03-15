@@ -11,7 +11,8 @@ class GetContent(template.Node):
     def __init__(self, bits):
         self.varname = bits[2]
         self.ctype=bits[3]
-        self.cid=bits[4]
+        self.field=bits[4]
+        self.cid=bits[5]
 
     def __repr__(self):
         return "<LiveWhaleContent>"
@@ -24,7 +25,8 @@ class GetContent(template.Node):
             earl = "http://www.carthage.edu/live/%s/%s@JSON" % (self.ctype,self.cid)
             response =  urllib2.urlopen(earl)
             data = response.read()
-            content = json.loads(data)
+            #content = json.loads(data)
+            content = json.loads(data)[self.field]
             cache.set(key, content)
 
         context[self.varname] = content
@@ -32,7 +34,7 @@ class GetContent(template.Node):
 
 class DoGetLiveWhaleContent:
     """
-    {% get_lw_content as variable_name content_type ID %}
+    {% get_lw_content as variable_name content_type field ID %}
     """
 
     def __init__(self, tag_name):
@@ -40,8 +42,8 @@ class DoGetLiveWhaleContent:
 
     def __call__(self, parser, token):
         bits = token.contents.split()
-        if len(bits) < 4:
-            raise template.TemplateSyntaxError, "'%s' tag takes three arguments" % bits[0]
+        if len(bits) < 5:
+            raise template.TemplateSyntaxError, "'%s' tag takes four arguments" % bits[0]
         if bits[1] != "as":
             raise template.TemplateSyntaxError, "First argument to '%s' tag must be 'as'" % bits[0]
         return GetContent(bits)
