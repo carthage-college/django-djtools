@@ -15,7 +15,8 @@ def send_mail(request, recipients, subject, femail, template, data, bcc=None, co
     headers = {'Reply-To': femail,'From': femail,}
     email = EmailMessage(subject, t.render(c), femail, recipients, bcc, headers=headers)
     email.encoding = "utf-8"
-    email.content_subtype = content
+    if content:
+        email.content_subtype = content
     fail = settings.EMAIL_FAIL_SILENTLY
     if settings.DEBUG:
         fail = False
