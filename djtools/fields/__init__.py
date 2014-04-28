@@ -58,10 +58,9 @@ SALUTATION_TITLES = (
     ("Prof.","Prof."),
     ("Dr.","Dr."),
 )
-if settings.DEBUG:
-    REQ = {'class': 'required'}
-else:
-    REQ = {'class': 'required','required': 'required'}
+
+REQ_CSS = {'class': 'required'}
+REQ_CSS_HTML5 = {'class': 'required','required': 'required'}
 
 YEARS1 =  [(x, x) for x in reversed(xrange(1926,datetime.date.today().year +1))]
 YEARS3 =  [(x, x) for x in reversed(xrange(1926,datetime.date.today().year +3))]
