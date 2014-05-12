@@ -17,17 +17,24 @@ def do_mysql(sql,select=True,db="default"):
     cursor.execute(sql)
     if select:
         dic = dictfetchall(cursor)
-    cursor.close()
     return dic
 
-def mysql_db(sql):
-    hs = settings.DATABASES['livewhale']['HOST']
-    us = settings.DATABASES['livewhale']['USER']
-    ps = settings.DATABASES['livewhale']['PASSWORD']
-    db = settings.DATABASES['livewhale']['NAME']
+def mysql_db(sql,db='default',select=False):
+    hs = settings.DATABASES[db]['HOST']
+    us = settings.DATABASES[db]['USER']
+    ps = settings.DATABASES[db]['PASSWORD']
+    db = settings.DATABASES[db]['NAME']
     conn  = MySQLdb.connect(host=hs,user=us,passwd=ps,db=db,use_unicode=True,charset="utf8")
-    curr = conn.cursor()
-    curr.execute(sql)
-    conn.commit()
-    curr.close ()
+    result = None
+    if select:
+        conn.query(sql)
+        r = conn.store_result()
+        result = r.fetch_row(maxrows=0)
+    else:
+        curr = conn.cursor()
+        result = curr.execute(sql)
+        conn.commit()
+        curr.close ()
+
     conn.close ()
+    return result
