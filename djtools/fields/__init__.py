@@ -63,6 +63,7 @@ REQ_CSS = {'class': 'required'}
 REQ_CSS_HTML5 = {'class': 'required','required': 'required'}
 
 NOW  = datetime.datetime.now()
+TODAY = datetime.date.today()
 YEARS1 =  [(x, x) for x in reversed(xrange(1926,datetime.date.today().year +1))]
 YEARS3 =  [(x, x) for x in reversed(xrange(1926,datetime.date.today().year +3))]
 NEXT_YEAR = datetime.date.today().year +1
