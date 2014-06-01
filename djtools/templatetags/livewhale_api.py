@@ -21,11 +21,16 @@ class GetContent(template.Node):
         if cache.get(key):
             content = cache.get(key)
         else:
-            earl = "http://www.carthage.edu/live/%s/%s@JSON" % (self.ctype,self.cid)
+            earl = "%s/live/%s/%s@JSON" % (
+                settings.LIVEWHALE_API_URL,self.ctype,self.cid
+            )
             response =  urllib2.urlopen(earl)
             data = response.read()
-            content = json.loads(data)
-            cache.set(key, content)
+            try:
+                content = json.loads(data)
+                cache.set(key, content)
+            except:
+                content = ""
 
         context[self.varname] = content
         return ''
