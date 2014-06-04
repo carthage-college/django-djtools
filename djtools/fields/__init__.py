@@ -64,9 +64,9 @@ REQ_CSS_HTML5 = {'class': 'required','required': 'required'}
 
 NOW  = datetime.datetime.now()
 TODAY = datetime.date.today()
-YEARS1 =  [(x, x) for x in reversed(xrange(1926,datetime.date.today().year +1))]
-YEARS3 =  [(x, x) for x in reversed(xrange(1926,datetime.date.today().year +3))]
-NEXT_YEAR = datetime.date.today().year +1
+YEARS1 =  [(x, x) for x in reversed(xrange(1926,TODAY.year +1))]
+YEARS3 =  [(x, x) for x in reversed(xrange(1926,TODAY.year +3))]
+NEXT_YEAR = TODAY.year +1
 
 STATE_CHOICES = (
     ('','State'),
