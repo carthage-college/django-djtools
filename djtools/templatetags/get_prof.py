@@ -24,14 +24,15 @@ class GetProf(template.Node):
             prof = cache.get(key)
         else:
             user = get_novell_username(email)
-            earl = "http://www.carthage.edu/live/json/profiles/search/%s/" % user
+            earl = "https://www.carthage.edu/live/json/profiles/search/%s/" % user
             response =  urllib2.urlopen(earl)
-            data = response.read()
-            try:
-                prof = json.loads(data)[0]
-                cache.set(key, prof)
-            except:
-                prof = None
+            data = json.loads(response.read())
+            prof = None
+            if len(data) > 0:
+                for p in data:
+                    if p.get("profiles_37"):
+                        prof = p
+                        cache.set(key, prof)
 
         context[self.varname] = prof
         return ''
