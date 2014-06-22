@@ -24,9 +24,9 @@ class GetContent(template.Node):
             earl = "%s/live/%s/%s@JSON" % (
                 settings.LIVEWHALE_API_URL,self.ctype,self.cid
             )
-            response =  urllib2.urlopen(earl)
-            data = response.read()
             try:
+                response =  urllib2.urlopen(earl)
+                data = response.read()
                 content = json.loads(data)
                 cache.set(key, content)
             except:
