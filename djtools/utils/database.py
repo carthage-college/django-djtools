@@ -25,7 +25,7 @@ def mysql_db(sql,db='default',select=False):
     us = settings.DATABASES[db]['USER']
     ps = settings.DATABASES[db]['PASSWORD']
     db = settings.DATABASES[db]['NAME']
-    conn  = MySQLdb.connect(host=hs,port=pt,user=us,passwd=ps,db=db,use_unicode=True,charset="utf8")
+    conn  = MySQLdb.connect(host=hs,port=int(pt),user=us,passwd=ps,db=db,use_unicode=True,charset="utf8")
     result = None
     if select:
         conn.query(sql)
