@@ -4,7 +4,7 @@ from django.template import loader
 from django.http import HttpResponseServerError, HttpResponseNotFound
 from django.core.mail import EmailMessage
 
-def send_mail(request, recipients, subject, femail, template, data, bcc=None, content="html"):
+def send_mail(request, recipients, subject, femail, template, data, bcc=None, content="html", attach=False):
     if not bcc:
         bcc = settings.MANAGERS
     t = loader.get_template(template)
@@ -13,13 +13,21 @@ def send_mail(request, recipients, subject, femail, template, data, bcc=None, co
     else:
         c = Context({'data':data,})
     headers = {'Reply-To': femail,'From': femail,}
-    email = EmailMessage(subject, t.render(c), femail, recipients, bcc, headers=headers)
+    email = EmailMessage(
+        subject, t.render(c), femail, recipients, bcc, headers=headers
+    )
     email.encoding = "utf-8"
     if content:
         email.content_subtype = content
-    fail = settings.EMAIL_FAIL_SILENTLY
+    if attach:
+        for field, value in request.FILES.items():
+            email.attach(value.name, value.read(), value.content_type)
+
+    try:
+        fail = settings.EMAIL_FAIL_SILENTLY
+    except:
+        fail = True
     if settings.DEBUG:
         fail = False
-    #email.send(fail_silently=fail)
-    email.send(fail_silently=True)
+    email.send(fail_silently=fail)
 
