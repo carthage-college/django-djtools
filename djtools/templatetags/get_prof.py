@@ -34,6 +34,12 @@ class GetProf(template.Node):
             if len(data) > 0:
                 for p in data:
                     if p.get("profiles_37"):
+                        listz = p["thumbnail"].split('/')
+                        listz[8] = '145'
+                        listz[0] = 'https:'
+                        new_listz = listz[0:9]
+                        new_listz.append(listz[-1])
+                        p["thumbnail"] = '/'.join(new_listz)
                         prof = p
                         cache.set(key, prof)
 

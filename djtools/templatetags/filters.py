@@ -8,6 +8,20 @@ import urllib2, os.path, base64
 
 register = template.Library()
 
+@register.filter
+def keyvalue(dict, key):
+    """
+    takes a dictionary key and returns the value
+
+    Usage: {{dictionary|keyvalue:key_variable}}
+           {{dictionary|keyvalue:key_variable|keyvalue:another_key}}
+    the latter is theoretical at this point for nested dictionaries.
+    """
+    try:
+        return dict[key]
+    except KeyError:
+        return ''
+
 @register.filter()
 @template.defaultfilters.stringfilter
 def format_phone(value):
