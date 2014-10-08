@@ -7,6 +7,11 @@ BINARY_CHOICES = (
     ('Yes', 'Yes'),
     ('No', 'No'),
 )
+YES_NO_DECLINE = (
+    ('Yes', 'Yes'),
+    ('No', 'No'),
+    ('Decline', 'Decline to state')
+)
 GENDER_CHOICES = (
     ('Male', 'Male'),
     ('Female', 'Female'),
@@ -51,10 +56,8 @@ SHIRT_SIZES = (
 
 SALUTATION_TITLES = (
     ('','-------'),
-    ("Mrs.","Mrs."),
     ("Ms.","Ms."),
     ("Mr.","Mr."),
-    ("Master.","Master."),
     ("Prof.","Prof."),
     ("Dr.","Dr."),
 )
