@@ -23,9 +23,10 @@ class GetProf(template.Node):
         if cache.get(key):
             prof = cache.get(key)
         else:
+            root = "https://www.carthage.edu"
             prof = None
             user = get_novell_username(email)
-            earl = "https://www.carthage.edu/live/json/profiles/search/%s/" % user
+            earl = "%s/live/json/profiles/search/%s/" % (root,user)
             try:
                 response =  urllib2.urlopen(earl)
                 data = json.loads(response.read())
@@ -33,13 +34,22 @@ class GetProf(template.Node):
                 data = ""
             if len(data) > 0:
                 for p in data:
-                    if p.get("profiles_37"):
-                        listz = p["thumbnail"].split('/')
-                        listz[8] = '145'
-                        listz[0] = 'https:'
-                        new_listz = listz[0:9]
-                        new_listz.append(listz[-1])
-                        p["thumbnail"] = '/'.join(new_listz)
+                    if p.get("profiles_37") or p.get("profiles_45") \
+                    or p.get("profiles_149") or p.get("profiles_80"):
+                        earl = "%s/live/profiles/%s@JSON" % (root,p["id"])
+                        response =  urllib2.urlopen(earl)
+                        p = json.loads(response.read())
+                        if p.get("parent"):
+                            earl = "%s/live/profiles/%s@JSON" % (root,p["parent"])
+                            response =  urllib2.urlopen(earl)
+                            p = json.loads(response.read())
+                        if p.get("thumb"):
+                            listz = p["thumb"].split('/')
+                            listz[8] = '145'
+                            listz[0] = 'https:'
+                            new_listz = listz[0:9]
+                            new_listz.append(listz[-1])
+                            p["thumbnail"] = '/'.join(new_listz)
                         prof = p
                         cache.set(key, prof)
 
