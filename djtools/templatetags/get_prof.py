@@ -12,21 +12,20 @@ class GetProf(template.Node):
 
     def __init__(self, bits):
         self.varname = bits[2]
-        self.email=bits[3]
+        self.uname=bits[3]
 
     def __repr__(self):
         return "<Professor>"
 
     def render(self, context):
-        email = template.resolve_variable(self.email, context)
-        key = "livewhale_get_prof_%s" % email
+        uname = template.resolve_variable(self.uname, context)
+        key = "livewhale_get_prof_%s" % uname
         if cache.get(key):
             prof = cache.get(key)
         else:
             root = "https://www.carthage.edu"
             prof = None
-            user = get_novell_username(email)
-            earl = "%s/live/json/profiles/search/%s/" % (root,user)
+            earl = "%s/live/json/profiles/search/%s/" % (root,uname)
             try:
                 response =  urllib2.urlopen(earl)
                 data = json.loads(response.read())
@@ -58,7 +57,7 @@ class GetProf(template.Node):
 
 class DoGetProf:
     """
-    {% get_prof as variable_name email_address [or] username %}
+    {% get_prof as variable_name ldap_user %}
     """
 
     def __init__(self, tag_name):
