@@ -12,7 +12,8 @@ class GetProf(template.Node):
 
     def __init__(self, bits):
         self.varname = bits[2]
-        self.uname=bits[3]
+        # works for ldap username or email address
+        self.uname=bits[3].split("@")[0]
 
     def __repr__(self):
         return "<Professor>"
@@ -57,7 +58,7 @@ class GetProf(template.Node):
 
 class DoGetProf:
     """
-    {% get_prof as variable_name ldap_user %}
+    {% get_prof as variable_name ldap_user/email %}
     """
 
     def __init__(self, tag_name):
