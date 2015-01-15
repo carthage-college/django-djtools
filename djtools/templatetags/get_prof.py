@@ -13,13 +13,13 @@ class GetProf(template.Node):
     def __init__(self, bits):
         self.varname = bits[2]
         # works for ldap username or email address
-        self.uname=bits[3].split("@")[0]
+        self.uname=bits[3]
 
     def __repr__(self):
         return "<Professor>"
 
     def render(self, context):
-        uname = template.resolve_variable(self.uname, context)
+        uname = template.resolve_variable(self.uname, context).split("@")[0]
         key = "livewhale_get_prof_%s" % uname
         if cache.get(key):
             prof = cache.get(key)
