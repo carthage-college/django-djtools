@@ -16,10 +16,12 @@ class GetProf(template.Node):
         self.uname=bits[3]
 
     def __repr__(self):
-        return "<Professor>"
+        return "<Profile>"
 
     def render(self, context):
-        uname = template.resolve_variable(self.uname, context).split("@")[0]
+        uname = template.resolve_variable(self.uname, context)
+        if uname:
+            uname = uname.split("@")[0]
         key = "livewhale_get_prof_%s" % uname
         if cache.get(key):
             prof = cache.get(key)
