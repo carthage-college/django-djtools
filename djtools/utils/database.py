@@ -39,3 +39,19 @@ def mysql_db(sql,db='default',select=False):
 
     conn.close ()
     return result
+
+def row2dict(row):
+    """
+    Convert sqlalchemy row object to python dictionary
+
+    or as a one liner:
+
+    row2dict = lambda r: {c.name: str(getattr(r, c.name)) for c in r.__table__.columns}
+    """
+    d = {}
+    if row:
+        for column in row.__table__.columns:
+            d[column.name] = str(getattr(row, column.name))
+
+    return d
+

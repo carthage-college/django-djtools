@@ -6,19 +6,25 @@ register = template.Library()
 
 @register.tag()
 def ifusergroup(parser, token):
-    """ Check to see if the currently logged in user belongs to one or more groups
+    """
+    Check to see if the currently logged in user belongs to one or more groups
     Requires the Django authentication contrib app and middleware.
 
-    Usage: {% ifusergroup Admins %} ... {% endifusergroup %}, or
-           {% ifusergroup Admins Clients Programmers Managers %} ... {% else %} ... {% endifusergroup %}
-
+    Usage:  {% ifusergroup Admins %} ... {% endifusergroup %}, or
+            {% ifusergroup Admins Clients Programmers Managers %}
+            ...
+            {% else %}
+            ...
+            {% endifusergroup %}
     """
     try:
         tokensp = token.split_contents()
         groups = []
         groups+=tokensp[1:]
     except ValueError:
-        raise template.TemplateSyntaxError("Tag 'ifusergroup' requires at least 1 argument.")
+        raise template.TemplateSyntaxError(
+            "Tag 'ifusergroup' requires at least 1 argument."
+        )
 
     nodelist_true = parser.parse(('else', 'endifusergroup'))
     token = parser.next_token()
