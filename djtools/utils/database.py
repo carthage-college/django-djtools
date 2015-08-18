@@ -41,7 +41,7 @@ def mysql_db(sql,db='default',select=False):
     conn.close ()
     return result
 
-def row2dict(row):
+def row2dict(row, jason=False):
     """
     Convert sqlalchemy row object to python dictionary
 
@@ -53,7 +53,7 @@ def row2dict(row):
     if row:
         for column in row.__table__.columns:
             attr = getattr(row, column.name)
-            if isinstance(attr, datetime.date):
+            if isinstance(attr, datetime.date) and jason:
                 attr = str(attr)
             d[column.name] = attr
 
