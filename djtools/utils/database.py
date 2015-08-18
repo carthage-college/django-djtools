@@ -2,6 +2,7 @@ from django.conf import settings
 from django.db import connections
 
 import MySQLdb
+import datetime
 
 def dictfetchall(cursor):
     "Returns all rows from a cursor as a dict"
@@ -51,7 +52,10 @@ def row2dict(row):
     d = {}
     if row:
         for column in row.__table__.columns:
-            d[column.name] = getattr(row, column.name)
+            attr = getattr(row, column.name)
+            if isinstance(attr, datetime.date):
+                attr = str(attr)
+            d[column.name] = attr
 
     return d
 
