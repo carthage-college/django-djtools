@@ -19,9 +19,9 @@ class GetProf(template.Node):
         return "<Profile>"
 
     def render(self, context):
-        uname = template.resolve_variable(self.uname, context)
-        if uname:
-            uname = uname.split("@")[0]
+        email = template.resolve_variable(self.uname, context)
+        if email:
+            uname = email.split("@")[0]
         key = "livewhale_get_prof_%s" % uname
         if cache.get(key):
             prof = cache.get(key)
@@ -36,8 +36,10 @@ class GetProf(template.Node):
                 data = ""
             if len(data) > 0:
                 for p in data:
-                    if p.get("profiles_37") or p.get("profiles_45") \
-                    or p.get("profiles_149") or p.get("profiles_80"):
+                    if p.get("profiles_37") == email \
+                    or p.get("profiles_45") == email \
+                    or p.get("profiles_149") == email \
+                    or p.get("profiles_80") == email:
                         earl = "%s/live/profiles/%s@JSON" % (root,p["id"])
                         response =  urllib2.urlopen(earl)
                         p = json.loads(response.read())
