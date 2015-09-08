@@ -4,7 +4,9 @@ from django.core.cache import cache
 
 from djtools.templatetags.filters import get_novell_username
 
-import urllib2, json, sys
+import urllib2, json, sys, logging
+
+logger = logging.getLogger(__name__)
 
 register = template.Library()
 
@@ -12,39 +14,40 @@ class GetProf(template.Node):
 
     def __init__(self, bits):
         self.varname = bits[2]
-        # works for ldap username or email address
+        # ldap username
         self.uname=bits[3]
 
     def __repr__(self):
         return "<Profile>"
 
     def render(self, context):
-        email = template.resolve_variable(self.uname, context)
-        if email:
-            uname = email.split("@")[0]
-        key = "livewhale_get_prof_%s" % uname
+        uname = template.resolve_variable(self.uname, context)
+        key = "livewhale_get_prof_{}".format(uname)
         if cache.get(key):
             prof = cache.get(key)
         else:
             root = "https://www.carthage.edu"
             prof = None
-            earl = "%s/live/json/profiles/search/%s/" % (root,uname)
+            earl = "{}/live/json/profiles/search/{}/".format(root,uname)
             try:
                 response =  urllib2.urlopen(earl)
                 data = json.loads(response.read())
             except:
                 data = ""
             if len(data) > 0:
+                email = "{}@carthage.edu".format(uname)
                 for p in data:
                     if p.get("profiles_37") == email \
                     or p.get("profiles_45") == email \
                     or p.get("profiles_149") == email \
                     or p.get("profiles_80") == email:
-                        earl = "%s/live/profiles/%s@JSON" % (root,p["id"])
+                        earl = "{}/live/profiles/{}@JSON".format(root,p["id"])
                         response =  urllib2.urlopen(earl)
                         p = json.loads(response.read())
                         if p.get("parent"):
-                            earl = "%s/live/profiles/%s@JSON" % (root,p["parent"])
+                            earl = "{}/live/profiles/{}@JSON".format(
+                                root,p["parent"]
+                            )
                             response =  urllib2.urlopen(earl)
                             p = json.loads(response.read())
                         if p.get("thumb"):
@@ -62,7 +65,7 @@ class GetProf(template.Node):
 
 class DoGetProf:
     """
-    {% get_prof as variable_name ldap_user/email %}
+    {% get_prof as variable_name ldap_user %}
     """
 
     def __init__(self, tag_name):
@@ -71,9 +74,9 @@ class DoGetProf:
     def __call__(self, parser, token):
         bits = token.contents.split()
         if len(bits) < 3:
-            raise template.TemplateSyntaxError, "'%s' tag takes two arguments" % bits[0]
+            raise template.TemplateSyntaxError, "'{}' tag takes two arguments".format(bits[0])
         if bits[1] != "as":
-            raise template.TemplateSyntaxError, "First argument to '%s' tag must be 'as'" % bits[0]
+            raise template.TemplateSyntaxError, "First argument to '{}' tag must be 'as'".format(bits[0])
         return GetProf(bits)
 
 register.tag('get_prof', DoGetProf('get_prof'))
