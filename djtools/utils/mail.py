@@ -19,7 +19,7 @@ def send_mail(request, recipients, subject, femail, template, data, bcc=None, co
     email.encoding = "utf-8"
     if content:
         email.content_subtype = content
-    if attach:
+    if request.FILES and attach:
         for field, value in request.FILES.items():
             email.attach(value.name, value.read(), value.content_type)
 
