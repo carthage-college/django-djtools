@@ -27,11 +27,14 @@ def portal_auth_required(redirect_url=None):
                 resolve_url(redirect_url or reverse_lazy("access_denied"))
             )
             uid = get_userid(request.GET.get('uid'))
-            user = User.objects.get(pk=uid)
+            try:
+                user = User.objects.get(pk=uid)
+            except:
+                return HttpResponseRedirect(resolved_redirect_url)
             if not in_group(user, "BusinessOfficeAdmin") \
                 or not user.is_superuser:
-                #return HttpResponseRedirect(resolved_redirect_url)
-                return view_func(request, *args, **kwargs)
+                #return view_func(request, *args, **kwargs)
+                return HttpResponseRedirect(resolved_redirect_url)
             return view_func(request, *args, **kwargs)
         return _wrapped_view
     return decorator
