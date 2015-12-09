@@ -31,8 +31,7 @@ def portal_auth_required(redirect_url=None):
                 user = User.objects.get(pk=uid)
             except:
                 return HttpResponseRedirect(resolved_redirect_url)
-            if not in_group(user, "BusinessOfficeAdmin") \
-                or not user.is_superuser:
+            if not in_group(user, "BusinessOfficeAdmin") and not user.is_superuser:
                 #return view_func(request, *args, **kwargs)
                 return HttpResponseRedirect(resolved_redirect_url)
             return view_func(request, *args, **kwargs)
