@@ -24,7 +24,7 @@ def portal_auth_required(group=None, redirect_url=None):
         def _wrapped_view(request, *args, **kwargs):
             response = view_func(request, *args, **kwargs)
             resolved_redirect_url = force_str(
-                resolve_url(redirect_url or reverse_lazy("access_denied"))
+                resolve_url(redirect_url or reverse_lazy("auth_login"))
             )
             if not request.session.get("BusinessOfficeFinance"):
                 if not request.user.is_authenticated():
@@ -34,7 +34,7 @@ def portal_auth_required(group=None, redirect_url=None):
                         user = User.objects.get(pk=uid)
                     except:
                         # nope
-                        return HttpResponseRedirect(resolved_redirect_url)
+                        return HttpResponseRedirect(reverse_lazy("auth_login"))
                 else:
                     user = request.user
                 if group:
