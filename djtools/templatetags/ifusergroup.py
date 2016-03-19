@@ -9,21 +9,29 @@ class GroupCheckNode(template.Node):
         self.groups = groups
         self.nodelist_true = nodelist_true
         self.nodelist_false = nodelist_false
+
     def render(self, context):
         user = resolve_variable('user', context)
 
         if not user.is_authenticated():
             return self.nodelist_false.render(context)
 
-        allowed=False
+        allowed = False
         for checkgroup in self.groups:
+
+            if checkgroup.startswith('"') and checkgroup.endswith('"'):
+                checkgroup = checkgroup[1:-1]
+
+            if checkgroup.startswith("'") and checkgroup.endswith("'"):
+                checkgroup = checkgroup[1:-1]
+
             try:
                 group = Group.objects.get(name=checkgroup)
             except Group.DoesNotExist:
                 break
 
             if group in user.groups.all():
-                allowed=True
+                allowed = True
                 break
 
         if allowed:
@@ -31,28 +39,25 @@ class GroupCheckNode(template.Node):
         else:
             return self.nodelist_false.render(context)
 
-
 @register.tag()
 def ifusergroup(parser, token):
     """
     Check to see if the currently logged in user belongs to one or more groups
-    Requires the Django authentication contrib app and middleware.
+    Requires the Django authentication contrib app and middleware.  Mod of
+    http://djangosnippets.org/snippets/2736/
+    to support multi-word group names
+    (with single/double quotes, e.g. {% ifusergroup 'Store Keeper' %}).
 
-    Usage:  {% ifusergroup Admins %} ... {% endifusergroup %}, or
-            {% ifusergroup Admins Clients Programmers Managers %}
-            ...
-            {% else %}
-            ...
-            {% endifusergroup %}
+    Usage: {% ifusergroup Admins %} ... {% endifusergroup %}, or
+           {% ifusergroup Admins Clients Programmers Managers %} ... {% else %} ... {% endifusergroup %}
+
     """
     try:
         tokensp = token.split_contents()
         groups = []
-        groups+=tokensp[1:]
+        groups += tokensp[1:]
     except ValueError:
-        raise template.TemplateSyntaxError(
-            "Tag 'ifusergroup' requires at least 1 argument."
-        )
+        raise template.TemplateSyntaxError("Tag 'ifusergroup' requires at least 1 argument.")
 
     nodelist_true = parser.parse(('else', 'endifusergroup'))
     token = parser.next_token()
