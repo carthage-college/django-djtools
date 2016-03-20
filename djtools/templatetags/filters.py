@@ -46,13 +46,13 @@ format_phone.needs_autoescape = False
 
 @register.filter()
 @template.defaultfilters.stringfilter
-def get_novell_username(value):
-    novell = value.split("@")
+def get_ldap_username(value):
+    lname = value.split("@")
     try:
-        novell = novell[0]
+        lname = lname[0]
     except:
-        novell = ''
-    return novell
+        lname = ''
+    return lname
 
 @register.filter()
 @template.defaultfilters.stringfilter
