@@ -2,8 +2,6 @@ from django import template
 from django.conf import settings
 from django.core.cache import cache
 
-from djtools.templatetags.filters import get_novell_username
-
 import urllib2, json, sys
 
 register = template.Library()
