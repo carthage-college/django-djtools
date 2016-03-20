@@ -19,7 +19,10 @@ class GetProf(template.Node):
         return "<Profile>"
 
     def render(self, context):
-        uname = template.resolve_variable(self.uname, context).split('@')[0]
+        try:
+            uname = template.resolve_variable(self.uname, context).split('@')[0]
+        except:
+            return ''
         key = "livewhale_get_prof_{}".format(uname)
         if cache.get(key):
             prof = cache.get(key)
