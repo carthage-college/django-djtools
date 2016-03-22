@@ -1,5 +1,6 @@
 from uuid import uuid4
-from os.path import join
+from os import path
+from os import makedirs
 
 def upload_to_path(self, filename):
     """
@@ -12,12 +13,12 @@ def upload_to_path(self, filename):
     path = "{}".format(
         self.get_slug()
     )
-    return join(path, filename)
+    return path.join(path, filename)
 
 
-def handle_uploaded_file(f, path):
+def handle_uploaded_file(f, sendero):
     """
-    Rename file to random string, combine it with 'path'
+    Rename file to random string, combine it with 'sendero'
     and write to new destination. Handy when not using
     a model class for your form.
     """
@@ -26,7 +27,14 @@ def handle_uploaded_file(f, path):
     # set filename as random string
     filename = '{}.{}'.format(uuid4().hex, ext)
     # combine it all together
-    phile = join(path, filename)
+    phile = path.join(sendero, filename)
+    # create directory if not already exists
+    if not path.exists(path.dirname(phile)):
+        try:
+            makedirs(path.dirname(phile))
+        except OSError as exc: # Guard against race condition
+            if exc.errno != errno.EEXIST:
+                raise
     # and write
     with open(phile, 'wb+') as destination:
         for chunk in f.chunks():
