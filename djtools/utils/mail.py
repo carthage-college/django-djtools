@@ -23,11 +23,20 @@ def send_mail(request, recipients, subject, femail, template, data, bcc=None, co
         for field, value in request.FILES.items():
             email.attach(value.name, value.read(), value.content_type)
 
-    try:
-        fail = settings.EMAIL_FAIL_SILENTLY
-    except:
-        fail = True
-    if settings.DEBUG:
-        fail = False
-    email.send(fail_silently=fail)
+    status = False
+    # try 5 times then quit
+    count = 0
+    while True:
+        try:
+            email.send(fail_silently=False)
+            status = True
+            break
+        except:
+            count += 1
+            if count < 5:
+                pass
+            else:
+                break
+
+    return status
 
