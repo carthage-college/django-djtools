@@ -2,6 +2,8 @@ from uuid import uuid4
 from os import path
 from os import makedirs
 
+import errno
+
 def upload_to_path(self, filename):
     """
     Rename file to random string and generate path for a file field.
@@ -16,7 +18,7 @@ def upload_to_path(self, filename):
     return path.join(sendero, filename)
 
 
-def handle_uploaded_file(f, sendero):
+def handle_uploaded_file(f, sendero, filename=None):
     """
     Rename file to random string, combine it with 'sendero'
     and write to new destination. Handy when not using
@@ -24,8 +26,10 @@ def handle_uploaded_file(f, sendero):
     """
     # obtain the file extension
     ext = f.name.split(".")[-1]
-    # set filename as random string
-    filename = '{}.{}'.format(uuid4().hex, ext)
+    if not filename:
+        # set filename as random string
+        filename = uuid4().hex
+    filename = '{}.{}'.format(filename, ext)
     # combine it all together
     phile = path.join(sendero, filename)
     # create directory if not already exists
@@ -39,4 +43,9 @@ def handle_uploaded_file(f, sendero):
     with open(phile, 'wb+') as destination:
         for chunk in f.chunks():
             destination.write(chunk)
-    return filename
+
+    # tell whomever called if upload worked or not
+    if path.isfile(phile):
+        return filename
+    else:
+        return None
