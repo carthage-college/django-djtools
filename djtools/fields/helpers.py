@@ -29,7 +29,7 @@ def handle_uploaded_file(f, sendero, filename=None):
     if not filename:
         # set filename as random string
         filename = uuid4().hex
-    filename = '{}.{}'.format(filename, ext)
+    filename = u'{}.{}'.format(filename, ext)
     # combine it all together
     phile = path.join(sendero, filename)
     # create directory if not already exists
