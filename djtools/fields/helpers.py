@@ -1,8 +1,10 @@
+# -*- coding: utf-8 -*-
 from uuid import uuid4
 from os import path
 from os import makedirs
 
 import errno
+
 
 def upload_to_path(self, filename):
     """
