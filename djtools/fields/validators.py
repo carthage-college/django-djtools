@@ -2,6 +2,7 @@ from django.core.validators import *
 from django.core.exceptions import ValidationError
 
 import magic
+import datetime
 
 
 class MimetypeValidator(object):
@@ -18,6 +19,14 @@ class MimetypeValidator(object):
         except AttributeError as e:
             raise ValidationError('This value could not be validated for file type' % value)
 
+
+
+def validate_epoch(value):
+    if value < datetime.date(1900, 1, 1):
+        raise ValidationError(
+            'Year %(value)s must be greater than 1900',
+            params={'value': value.year},
+        )
 
 credit_gpa_validator = RegexValidator(
     regex='^[0-9]{1,}\.[0-9]{1,2}$',
