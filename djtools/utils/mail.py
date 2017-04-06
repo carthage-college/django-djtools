@@ -1,8 +1,22 @@
 from django.conf import settings
+from django.core.validators import validate_email
+from django.core.exceptions import ValidationError
 from django.template import RequestContext, Context
 from django.template import loader
 from django.http import HttpResponseServerError, HttpResponseNotFound
 from django.core.mail import EmailMessage
+
+
+def validateEmail(email):
+    '''
+    simple function to verify an email with django's validate_email validator
+    '''
+    try:
+        validate_email(email)
+        return True
+    except ValidationError:
+        return False
+
 
 def send_mail(request, recipients, subject, femail, template, data, bcc=None, content="html", attach=False):
     if not bcc:
