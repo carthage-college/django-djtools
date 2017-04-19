@@ -12,11 +12,11 @@ class MimetypeValidator(object):
         try:
             mime = magic.from_buffer(value.read(), mime=True)
             if not mime in self.mimetypes:
-                raise ValidationError('%s is not an acceptable file type' % value)
-                #raise ValidationError('%s is not an acceptable file type' % mime)
+                raise ValidationError('{} is not an acceptable file type'.format(value))
+                #raise ValidationError('{} is not an acceptable file type'.format(mime))
                 #raise ValidationError('{} {}'.format(value, mime))
         except AttributeError as e:
-            raise ValidationError('This value could not be validated for file type' % value)
+            raise ValidationError('This value could not be validated for file type {}'.format(value))
 
 
 credit_gpa_validator = RegexValidator(
