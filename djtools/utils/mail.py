@@ -6,6 +6,8 @@ from django.template import loader
 from django.http import HttpResponseServerError, HttpResponseNotFound
 from django.core.mail import EmailMessage
 
+import django
+
 
 def validateEmail(email):
     '''
@@ -22,13 +24,23 @@ def send_mail(request, recipients, subject, femail, template, data, bcc=None, co
     if not bcc:
         bcc = settings.MANAGERS
     t = loader.get_template(template)
-    if request:
-        c = RequestContext(request, {'data':data,})
+    # VERSION returns (1, x, x, u'final', 1)
+    # hopefully, we will be done using django 1.6 by the time 2.x comes out
+    if django.VERSION[1] > 6:
+        if request:
+            rendered = t.render({'data':data,}, request)
+        else:
+            rendered = t.render({'data':data,},)
     else:
-        c = Context({'data':data,})
+        if request:
+            c = RequestContext(request, {'data':data,})
+        else:
+            c = Context({'data':data,})
+        rendered = t.render(c)
+
     headers = {'Reply-To': femail,'From': femail,}
     email = EmailMessage(
-        subject, t.render(c), femail, recipients, bcc, headers=headers
+        subject, rendered, femail, recipients, bcc, headers=headers
     )
     email.encoding = "utf-8"
     if content:
@@ -53,4 +65,3 @@ def send_mail(request, recipients, subject, femail, template, data, bcc=None, co
                 break
 
     return status
-
