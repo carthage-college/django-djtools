@@ -14,6 +14,7 @@ def server_error(request, template_name='500.html'):
         'media_url': settings.MEDIA_URL,'layout':[0,1],
     })))
 
+
 def four_oh_four_error(request, template_name='404.html'):
     """
     404 error handler.
@@ -23,7 +24,9 @@ def four_oh_four_error(request, template_name='404.html'):
         media_url
             Path of static media (e.g. "media.example.org")
     """
+
     t = loader.get_template(template_name)
-    return HttpResponseNotFound(t.render(Context({
-        'media_url': settings.MEDIA_URL,'layout':[0,1],
-    })))
+
+    rendered = t.render({'media_url': settings.MEDIA_URL,'layout':[0,1]}, request)
+
+    return HttpResponseNotFound(rendered)
