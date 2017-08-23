@@ -1,5 +1,18 @@
+def facstaff(cid):
+    '''
+    is user faculty or staff?
+    '''
+
+    try:
+        user = User.objects.get(pk=cid)
+        status = in_group(user, "carthageStaffStatus","carthageFacultyStatus")
+    except:
+        status = False
+    return status
+
+
 def in_group(user, *args):
-    """
+    '''
     Determine whether or not a user belongs to a group or groups.
     If more than one group is passed, then validity is based on
     membership in at least one of the groups in the list. The user
@@ -11,7 +24,8 @@ def in_group(user, *args):
         request.user,
         "carthageStaffStatus","carthageFacultyStatus"
     )
-    """
+    '''
+
     g = False
     if user:
         for arg in args:
@@ -19,4 +33,9 @@ def in_group(user, *args):
             if g:
                 g = True
                 break
+
+    # superuser exception
+    if not g and user.is_superuser:
+        g = True
+
     return g
