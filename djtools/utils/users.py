@@ -31,7 +31,7 @@ def in_group(user, *args):
     return g
 
 
-def facstaff(cid):
+def faculty_staff(cid):
     '''
     is user faculty or staff?
     '''
