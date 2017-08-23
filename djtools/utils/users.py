@@ -1,14 +1,4 @@
-def facstaff(cid):
-    '''
-    is user faculty or staff?
-    '''
-
-    try:
-        user = User.objects.get(pk=cid)
-        status = in_group(user, "carthageStaffStatus","carthageFacultyStatus")
-    except:
-        status = False
-    return status
+from django.contrib.auth.models import User
 
 
 def in_group(user, *args):
@@ -39,3 +29,16 @@ def in_group(user, *args):
         g = True
 
     return g
+
+
+def facstaff(cid):
+    '''
+    is user faculty or staff?
+    '''
+
+    try:
+        user = User.objects.get(pk=cid)
+        status = in_group(user, "carthageStaffStatus","carthageFacultyStatus")
+    except:
+        status = False
+    return status
