@@ -20,7 +20,7 @@ def validateEmail(email):
         return False
 
 
-def send_mail(request, recipients, subject, femail, template, data, bcc=None, content="html", attach=False):
+def send_mail(request, recipients, subject, femail, template, data, bcc=None, content='html', attach=False):
     if not bcc:
         bcc = settings.MANAGERS
     t = loader.get_template(template)
@@ -39,15 +39,22 @@ def send_mail(request, recipients, subject, femail, template, data, bcc=None, co
         rendered = t.render(c)
 
     headers = {'Reply-To': femail,'From': femail,}
+
     email = EmailMessage(
         subject, rendered, femail, recipients, bcc, headers=headers
     )
-    email.encoding = "utf-8"
+
+    email.encoding = 'utf-8'
+
     if content:
         email.content_subtype = content
+
     if attach:
-        for field, value in request.FILES.items():
-            email.attach(value.name, value.read(), value.content_type)
+        try:
+            email.attach_file(attach)
+        except:
+            for field, value in request.FILES.items():
+                email.attach(value.name, value.read(), value.content_type)
 
     status = False
     # try 5 times then quit
