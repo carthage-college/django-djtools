@@ -29,7 +29,13 @@ class GroupCheckNode(template.Node):
             try:
                 group = Group.objects.get(name=checkgroup)
             except Group.DoesNotExist:
-                break
+                try:
+                    group = Group.objects.get(
+                        name=Variable(checkgroup).resolve(context)
+                    )
+                except Group.DoesNotExist:
+                    group = None
+                    break
 
             if group in user.groups.all():
                 allowed = True
