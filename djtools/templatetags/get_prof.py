@@ -14,48 +14,49 @@ class GetProf(template.Node):
         self.uname=bits[3]
 
     def __repr__(self):
-        return "<Profile>"
+        return '<Profile>'
 
     def render(self, context):
         try:
-            uname = template.resolve_variable(self.uname, context).split('@')[0]
+          #uname = template.resolve_variable(self.uname, context).split('@')[0]
+          uname = template.Variable(self.uname).resolve(context).split('@')[0]
         except:
-            return ''
-        key = "livewhale_get_prof_{}".format(uname)
+          return ''
+        key = 'livewhale_get_prof_{}'.format(uname)
         if cache.get(key):
             prof = cache.get(key)
         else:
-            root = "https://www.carthage.edu"
+            root = 'https://www.carthage.edu'
             prof = None
-            earl = "{}/live/json/profiles/search/{}/".format(root,uname)
+            earl = '{}/live/json/profiles/search/{}/'.format(root,uname)
             try:
                 response =  urllib2.urlopen(earl)
                 data = json.loads(response.read())
             except:
-                data = ""
+                data = ''
             if len(data) > 0:
-                email = "{}@carthage.edu".format(uname)
+                email = '{}@carthage.edu'.format(uname)
                 for p in data:
-                    if p.get("profiles_37") == email \
-                    or p.get("profiles_45") == email \
-                    or p.get("profiles_149") == email \
-                    or p.get("profiles_80") == email:
-                        earl = "{}/live/profiles/{}@JSON".format(root,p["id"])
+                    if p.get('profiles_37') == email \
+                    or p.get('profiles_45') == email \
+                    or p.get('profiles_149') == email \
+                    or p.get('profiles_80') == email:
+                        earl = '{}/live/profiles/{}@JSON'.format(root,p['id'])
                         response =  urllib2.urlopen(earl)
                         p = json.loads(response.read())
-                        if p.get("parent"):
-                            earl = "{}/live/profiles/{}@JSON".format(
-                                root,p["parent"]
+                        if p.get('parent'):
+                            earl = '{}/live/profiles/{}@JSON'.format(
+                                root,p['parent']
                             )
                             response =  urllib2.urlopen(earl)
                             p = json.loads(response.read())
-                        if p.get("thumb"):
-                            listz = p["thumb"].split('/')
+                        if p.get('thumb'):
+                            listz = p['thumb'].split('/')
                             listz[8] = '145'
                             listz[0] = 'https:'
                             new_listz = listz[0:9]
                             new_listz.append(listz[-1])
-                            p["thumbnail"] = '/'.join(new_listz)
+                            p['thumbnail'] = '/'.join(new_listz)
                         prof = p
                         cache.set(key, prof)
 
