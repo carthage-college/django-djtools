@@ -20,9 +20,14 @@ def validateEmail(email):
         return False
 
 
-def send_mail(request, recipients, subject, femail, template, data, bcc=None, content='html', attach=False):
+def send_mail(
+    request, recipients, subject, femail, template, data, bcc=None,
+    content='html', attach=False
+):
+
     if not bcc:
-        bcc = settings.MANAGERS
+        bcc = [settings.MANAGERS[0][1],]
+
     t = loader.get_template(template)
     # VERSION returns (1, x, x, u'final', 1)
     # hopefully, we will be done using django 1.6 by the time 2.x comes out
