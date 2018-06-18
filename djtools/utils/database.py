@@ -20,13 +20,22 @@ def do_mysql(sql,select=True,db="default"):
         dic = dictfetchall(cursor)
     return dic
 
-def mysql_db(sql,db='default',select=False):
+def mysql_db(sql,db='default',ssl=None,select=False):
     hs = settings.DATABASES[db]['HOST']
     pt = settings.DATABASES[db]['PORT']
     us = settings.DATABASES[db]['USER']
     ps = settings.DATABASES[db]['PASSWORD']
     db = settings.DATABASES[db]['NAME']
-    conn  = MySQLdb.connect(host=hs,port=int(pt),user=us,passwd=ps,db=db,use_unicode=True,charset="utf8")
+    conn  = MySQLdb.connect(
+        host=hs,
+        port=int(pt),
+        user=us,
+        passwd=ps,
+        db=db,
+        ssl=ssl,
+        use_unicode=True,
+        charset="utf8"
+    )
     result = None
     if select:
         conn.query(sql)
