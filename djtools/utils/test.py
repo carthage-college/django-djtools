@@ -9,7 +9,9 @@ def create_test_user():
         settings.TEST_USER_USERNAME,
         settings.TEST_USER_EMAIL,
         settings.TEST_USER_PASSWORD,
-        id = settings.TEST_USER_COLLEGE_ID,
+        id = settings.TEST_USER_ID,
+        last_name = settings.TEST_USER_LASTNAME,
+        first_name = settings.TEST_USER_FIRSTNAME
     )
 
     return user
