@@ -22,7 +22,7 @@ class GetProf(template.Node):
           uname = template.Variable(self.uname).resolve(context).split('@')[0]
         except:
           return ''
-        key = 'livewhale_get_prof_{}'.format(uname)
+        key = 'livewhale_get_prof_{}'.format(uname).replace(" ", "")
         if cache.get(key):
             prof = cache.get(key)
         else:
