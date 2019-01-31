@@ -1,4 +1,8 @@
+from django.forms import ValidationError
 from django.forms.fields import CharField
+from django.utils.translation import ugettext_lazy as _
+
+import re
 
 
 class USPhoneNumberField(CharField):
