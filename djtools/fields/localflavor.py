@@ -6,12 +6,13 @@ from django.utils.translation import ugettext_lazy as _
 
 import re
 
+phone_digits_re = re.compile(r'^(?:1-?)?(\d{3})[-\.]?(\d{3})[-\.]?(\d{4})$')
+
 
 class USPhoneNumberField(CharField):
     """
     A form field that validates input as a U.S. phone number.
     """
-    phone_digits_re = re.compile(r'^(?:1-?)?(\d{3})[-\.]?(\d{3})[-\.]?(\d{4})$')
     default_error_messages = {
         'invalid': _('Phone numbers must be in XXX-XXX-XXXX format.'),
     }
