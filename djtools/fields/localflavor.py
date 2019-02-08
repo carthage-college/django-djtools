@@ -1,5 +1,7 @@
 from django.forms import ValidationError
 from django.forms.fields import CharField
+from django.utils.encoding import smart_text
+from django.core.validators import EMPTY_VALUES
 from django.utils.translation import ugettext_lazy as _
 
 import re
