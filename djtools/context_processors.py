@@ -16,7 +16,8 @@ def sitevars(request):
         context['root_url'] = settings.ROOT_URL
         context['login_url'] = settings.LOGIN_URL
         context['logout_url'] = settings.LOGOUT_URL
-        context['django_debug'] = settings.DEBUG
+        context['templates_debug'] = settings.TEMPLATES[0]['OPTIONS']['debug']
+        context['debug'] = settings.DEBUG
         # UI helpers for email
         context['dl_dt'] = '''
             style="background:#3ab0c8; color:#fff; float:left; font-weight:bold; margin-right:10px; padding:5px; width:200px;"
