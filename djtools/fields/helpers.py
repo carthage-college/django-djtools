@@ -14,10 +14,8 @@ def upload_to_path(self, filename):
     ext = filename.split('.')[-1]
     # set filename as random string
     filename = '{}.{}'.format(uuid4().hex, ext)
-    sendero = "{}".format(
-        self.get_slug()
-    )
-    return path.join(sendero, filename)
+
+    return path.join(self.get_slug(), filename)
 
 
 def handle_uploaded_file(f, sendero, filename=None):
