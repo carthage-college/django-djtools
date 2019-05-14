@@ -7,9 +7,8 @@ from djtools.utils.date import calculate_age
 
 from datetime import date
 
-import urllib2, os.path, base64
-
 register = template.Library()
+
 
 @register.filter
 def keyvalue(dict, key):
@@ -53,15 +52,6 @@ def get_ldap_username(value):
     except:
         lname = ''
     return lname
-
-@register.filter()
-@template.defaultfilters.stringfilter
-def verify_earl(value):
-    try:
-        resp = urllib2.urlopen(value)
-        return True
-    except urllib2.URLError, e:
-        return False
 
 @register.filter()
 @template.defaultfilters.stringfilter
