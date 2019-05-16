@@ -2,7 +2,14 @@ from django import template
 from django.conf import settings
 from django.core.cache import cache
 
-import urllib2, json, sys
+import json, sys
+
+# python 2.7/3.6 compatibility
+try:
+    import urllib2 as urllib
+except ImportError:
+    import urllib
+
 
 register = template.Library()
 
@@ -30,7 +37,7 @@ class GetProf(template.Node):
             prof = None
             earl = '{}/live/json/profiles/search/{}/'.format(root,uname)
             try:
-                response =  urllib2.urlopen(earl)
+                response =  urllib.urlopen(earl)
                 data = json.loads(response.read())
             except:
                 data = ''
@@ -42,13 +49,13 @@ class GetProf(template.Node):
                     or p.get('profiles_149') == email \
                     or p.get('profiles_80') == email:
                         earl = '{}/live/profiles/{}@JSON'.format(root,p['id'])
-                        response =  urllib2.urlopen(earl)
+                        response =  urllib.urlopen(earl)
                         p = json.loads(response.read())
                         if p.get('parent'):
                             earl = '{}/live/profiles/{}@JSON'.format(
                                 root,p['parent']
                             )
-                            response =  urllib2.urlopen(earl)
+                            response =  urllib.urlopen(earl)
                             p = json.loads(response.read())
                         if p.get('thumb'):
                             listz = p['thumb'].split('/')

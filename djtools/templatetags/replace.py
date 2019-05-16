@@ -3,11 +3,13 @@ from django.template import Library, Node, Variable, \
 
 register = Library()
 
+
 def get_var(v, context):
     try:
         return v.resolve(context)
     except VariableDoesNotExist:
         return v.var
+
 
 class ReplaceNode(Node):
 
@@ -22,9 +24,10 @@ class ReplaceNode(Node):
         new = unicode(get_var(self.new, context))
         return s.replace(old, new)
 
+
 @register.tag
 def replace(parser, token):
     args = token.split_contents()[1:]
     if len(args) != 3:
-        raise TemplateSyntaxError, '%r tag requires a string, an old value, and a new value.' % token.contents.split()[0]
+        raise TemplateSyntaxError('{} tag requires a string, an old value, and a new value.'.format(token.contents.split()[0]))
     return ReplaceNode(*args)

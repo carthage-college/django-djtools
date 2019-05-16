@@ -5,11 +5,13 @@ import time
 
 register = Library()
 
+
 def get_var(v, context):
     try:
         return v.resolve(context)
     except VariableDoesNotExist:
         return v.var
+
 
 class MungeTime(Node):
 
@@ -29,6 +31,7 @@ class MungeTime(Node):
             tyme = None
         return tyme
 
+
 @register.tag
 def string_time(parser, token):
     """
@@ -39,5 +42,11 @@ def string_time(parser, token):
     """
     args = token.split_contents()[1:]
     if len(args) != 3:
-        raise TemplateSyntaxError, '%r tag requires a string, time format of string, and the new format.' % token.contents.split()[0]
+        raise TemplateSyntaxError(
+            """
+            {} tag requires a string, time format of string, and the new format.
+            """.format(
+                token.contents.split()[0]
+            )
+        )
     return MungeTime(*args)

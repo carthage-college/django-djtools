@@ -2,7 +2,13 @@ from django import template
 from django.conf import settings
 from django.core.cache import cache
 
-import urllib2, json, sys
+import json, sys
+
+# python 2.7/3.6 compatibility
+try:
+    import urllib2 as urllib
+except ImportError:
+    import urllib
 
 register = template.Library()
 
@@ -25,7 +31,7 @@ class GetContent(template.Node):
                 settings.LIVEWHALE_API_URL,self.ctype,self.cid
             )
             try:
-                response =  urllib2.urlopen(earl)
+                response =  urllib.urlopen(earl)
                 data = response.read()
                 content = json.loads(data)
                 cache.set(key, content)
@@ -46,9 +52,9 @@ class DoGetLiveWhaleContent:
     def __call__(self, parser, token):
         bits = token.contents.split()
         if len(bits) < 4:
-            raise template.TemplateSyntaxError, "'%s' tag takes four arguments" % bits[0]
+            raise template.TemplateSyntaxError("'{}' tag takes four arguments".format(bits[0]))
         if bits[1] != "as":
-            raise template.TemplateSyntaxError, "First argument to '%s' tag must be 'as'" % bits[0]
+            raise template.TemplateSyntaxError("First argument to '{}' tag must be 'as'".format(bits[0]))
         return GetContent(bits)
 
 register.tag('get_lw_content', DoGetLiveWhaleContent('get_lw_content'))
