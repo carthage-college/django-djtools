@@ -74,9 +74,9 @@ class DoGetProf:
     def __call__(self, parser, token):
         bits = token.contents.split()
         if len(bits) < 3:
-            raise template.TemplateSyntaxError, "'{}' tag takes two arguments".format(bits[0])
+            raise template.TemplateSyntaxError("'{}' tag takes two arguments".format(bits[0]))
         if bits[1] != "as":
-            raise template.TemplateSyntaxError, "First argument to '{}' tag must be 'as'".format(bits[0])
+            raise template.TemplateSyntaxError("First argument to '{}' tag must be 'as'".format(bits[0]))
         return GetProf(bits)
 
 register.tag('get_prof', DoGetProf('get_prof'))
