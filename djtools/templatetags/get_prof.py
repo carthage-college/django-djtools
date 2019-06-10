@@ -44,10 +44,10 @@ class GetProf(template.Node):
             if len(data) > 0:
                 email = '{}@carthage.edu'.format(uname)
                 for p in data:
-                    if p.get('profiles_37').strip() == email \
-                    or p.get('profiles_45').strip() == email \
-                    or p.get('profiles_149').strip() == email \
-                    or p.get('profiles_80').strip() == email:
+                    if (p.get('profiles_37') and email in p.get('profiles_37')) \
+                      or (p.get('profiles_45') and email in p.get('profiles_45')) \
+                      or (p.get('profiles_149') and email in p.get('profiles_149')) \
+                      or (p.get('profiles_80') and email in p.get('profiles_80')):
                         earl = '{}/live/profiles/{}@JSON'.format(root,p['id'])
                         response =  urllib.urlopen(earl)
                         p = json.loads(response.read())
