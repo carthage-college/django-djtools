@@ -29,19 +29,10 @@ def send_mail(
         bcc = [settings.MANAGERS[0][1],]
 
     t = loader.get_template(template)
-    # VERSION returns (1, x, x, u'final', 1)
-    # hopefully, we will be done using django 1.6 by the time 2.x comes out
-    if django.VERSION[1] > 6:
-        if request:
-            rendered = t.render({'data':data,}, request)
-        else:
-            rendered = t.render({'data':data,},)
+    if request:
+        rendered = t.render({'data':data,}, request)
     else:
-        if request:
-            c = RequestContext(request, {'data':data,})
-        else:
-            c = Context({'data':data,})
-        rendered = t.render(c)
+        rendered = t.render({'data':data,},)
 
     headers = {'Reply-To': femail,'From': femail,}
 
