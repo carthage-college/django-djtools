@@ -6,9 +6,9 @@ import json, sys
 
 # python 2.7/3.6 compatibility
 try:
-    import urllib2 as urllib
+    from urllib2 import urlopen
 except ImportError:
-    import urllib
+    from urllib.request import urlopen
 
 register = template.Library()
 
@@ -31,7 +31,7 @@ class GetContent(template.Node):
                 settings.LIVEWHALE_API_URL,self.ctype,self.cid
             )
             try:
-                response =  urllib.urlopen(earl)
+                response =  urlopen(earl)
                 data = response.read()
                 content = json.loads(data)
                 cache.set(key, content)
