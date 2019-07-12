@@ -21,9 +21,9 @@ class MungeTime(Node):
         self.new = Variable(new)
 
     def render(self, context):
-        t = unicode(get_var(self.t, context))
-        old = unicode(get_var(self.old, context))
-        new = unicode(get_var(self.new, context))
+        t = str(get_var(self.t, context))
+        old = get_var(self.old, context)
+        new = get_var(self.new, context)
         try:
             t = time.strptime(t, old)
             tyme = time.strftime(new, t)
