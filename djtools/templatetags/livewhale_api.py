@@ -2,7 +2,7 @@ from django import template
 from django.conf import settings
 from django.core.cache import cache
 
-import json, sys
+import json
 
 # python 2.7/3.6 compatibility
 try:
@@ -12,6 +12,7 @@ except ImportError:
 
 register = template.Library()
 
+
 class GetContent(template.Node):
 
     def __init__(self, bits):
@@ -20,14 +21,14 @@ class GetContent(template.Node):
         self.cid=bits[4]
 
     def __repr__(self):
-        return "<LiveWhaleContent>"
+        return '<LiveWhaleContent>'
 
     def render(self, context):
-        key = "livewhale_%s_%s" % (self.ctype,self.cid)
+        key = 'livewhale_{}_{}'.format(self.ctype,self.cid)
         if cache.get(key):
             content = cache.get(key)
         else:
-            earl = "%s/live/%s/%s@JSON" % (
+            earl = '{}/live/{}/{}@JSON'.format(
                 settings.LIVEWHALE_API_URL,self.ctype,self.cid
             )
             try:
@@ -36,10 +37,11 @@ class GetContent(template.Node):
                 content = json.loads(data)
                 cache.set(key, content)
             except:
-                content = ""
+                content = ''
 
         context[self.varname] = content
         return ''
+
 
 class DoGetLiveWhaleContent:
     """
@@ -53,7 +55,7 @@ class DoGetLiveWhaleContent:
         bits = token.contents.split()
         if len(bits) < 4:
             raise template.TemplateSyntaxError("'{}' tag takes four arguments".format(bits[0]))
-        if bits[1] != "as":
+        if bits[1] != 'as':
             raise template.TemplateSyntaxError("First argument to '{}' tag must be 'as'".format(bits[0]))
         return GetContent(bits)
 
