@@ -8,7 +8,6 @@ from django.core.mail import EmailMessage
 
 import django
 import logging
-logger = logging.getLogger(__name__)
 
 
 def validateEmail(email):
@@ -63,7 +62,11 @@ def send_mail(
             status = True
             break
         except Exception as e:
-            logger.debug(e)
+            try:
+                logger = logging.getLogger(__name__)
+                logger.debug(e)
+            except:
+                pass
             count += 1
             if count < 5:
                 pass
