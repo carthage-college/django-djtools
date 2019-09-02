@@ -7,6 +7,8 @@ from django.http import HttpResponseServerError, HttpResponseNotFound
 from django.core.mail import EmailMessage
 
 import django
+import logging
+logger = logging.getLogger(__name__)
 
 
 def validateEmail(email):
@@ -60,7 +62,8 @@ def send_mail(
             email.send(fail_silently=False)
             status = True
             break
-        except:
+        except Exception as e:
+            logger.debug(e)
             count += 1
             if count < 5:
                 pass
