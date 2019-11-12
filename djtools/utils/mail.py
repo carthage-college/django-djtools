@@ -5,7 +5,6 @@ from django.template import loader
 from django.http import HttpResponseServerError, HttpResponseNotFound
 from django.core.mail import EmailMessage
 
-import django
 import logging
 
 
