@@ -25,7 +25,7 @@ def send_mail(
 ):
 
     if not bcc:
-        bcc = [settings.MANAGERS[0][1],]
+        bcc = [settings.MANAGERS[0][1]]
 
     t = loader.get_template(template)
     if request:
