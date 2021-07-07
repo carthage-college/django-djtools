@@ -1,12 +1,10 @@
 from django.conf import settings
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
-from django.template import RequestContext, Context
 from django.template import loader
 from django.http import HttpResponseServerError, HttpResponseNotFound
 from django.core.mail import EmailMessage
 
-import django
 import logging
 
 
@@ -27,7 +25,7 @@ def send_mail(
 ):
 
     if not bcc:
-        bcc = [settings.MANAGERS[0][1],]
+        bcc = [settings.MANAGERS[0][1]]
 
     t = loader.get_template(template)
     if request:

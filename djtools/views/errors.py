@@ -10,24 +10,16 @@ def server_error(request, template_name='500.html'):
     """
 
     t = loader.get_template(template_name)
-
-    rendered = t.render(
-        {'media_url': settings.MEDIA_URL,'layout':[0,1]}, request
-    )
-
-    return HttpResponseNotFound(rendered)
+    rendered = t.render({'media_url': settings.MEDIA_URL,}, request)
+    return HttpResponseServerError(rendered)
 
 
-def four_oh_four_error(request, template_name='404.html'):
+def four_oh_four_error(request, exception, template_name='404.html'):
     """
     404 error handler.
     Template: `404.html`
     """
 
     t = loader.get_template(template_name)
-
-    rendered = t.render(
-        {'media_url': settings.MEDIA_URL,'layout':[0,1]}, request
-    )
-
+    rendered = t.render({'media_url': settings.MEDIA_URL,}, request)
     return HttpResponseNotFound(rendered)

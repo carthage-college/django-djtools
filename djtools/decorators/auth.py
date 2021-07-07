@@ -1,5 +1,5 @@
 from django.http import HttpResponseRedirect
-from django.core.urlresolvers import reverse_lazy
+from django.urls import reverse_lazy
 from django.contrib.auth.decorators import user_passes_test
 
 
@@ -35,8 +35,7 @@ def group_required(*group_names):
 
     """
     def in_groups(u):
-        if u.is_authenticated():
-            if u.is_superuser or bool(u.groups.filter(name__in=group_names)):
-                return True
+        if u.is_superuser or bool(u.groups.filter(name__in=group_names)):
+            return True
         return False
     return user_passes_test(in_groups)
