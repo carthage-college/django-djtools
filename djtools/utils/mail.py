@@ -42,9 +42,7 @@ def send_mail(
     )
 
     email.encoding = 'utf-8'
-
-    if content:
-        email.content_subtype = content
+    email.content_subtype = content
 
     if attach:
         try:
