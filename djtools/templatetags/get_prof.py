@@ -24,10 +24,13 @@ class GetProf(template.Node):
 
     def render(self, context):
         """Render the template tag content."""
+        '''
         try:
             uname = template.Variable(self.uname).resolve(context).split('@')[0].strip()
         except Exception:
             return ''
+        '''
+        uname = template.Variable(self.uname).resolve(context).split('@')[0].strip()
         key = 'livewhale_get_prof_{0}'.format(uname)
         if cache.get(key):
             prof = cache.get(key)
@@ -36,10 +39,14 @@ class GetProf(template.Node):
             prof = None
             earl = '{0}/live/json/profiles/search/{1}/'.format(root, uname)
             response = requests.get(earl)
+            '''
             try:
                 json_data = json.loads(response.read())
             except Exception:
                 json_data = ''
+            '''
+            #content = response.content
+            json_data = response.json()
             if json_data:
                 email = '{0}@carthage.edu'.format(uname)
                 for profile in json_data:
@@ -62,15 +69,15 @@ class GetProf(template.Node):
                     if status:
                         earl = '{0}/live/profiles/{1}@JSON'.format(root, profile['id'])
                         response = requests.get(earl)
-                        profile_data = json.loads(response.read())
+                        profile_data = response.json()
                         if profile_data.get('parent'):
                             earl = '{0}/live/profiles/{1}@JSON'.format(
                                 root, profile_data['parent'],
                             )
                             response = requests.get(earl)
-                            profile = json.loads(response.read())
-                        if profile.get('thumb'):
-                            listz = profile['thumb'].split('/')
+                            profile_data = response.json()
+                        if profile_data.get('thumb'):
+                            listz = profile_data['thumb'].split('/')
                             listz[8] = '145'
                             listz[0] = 'https:'
                             new_listz = listz[:9]
