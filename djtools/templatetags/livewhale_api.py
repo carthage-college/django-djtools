@@ -1,14 +1,35 @@
+# -*- coding: utf-8 -*-
+
+import json
+
 from django import template
 from django.conf import settings
 from django.core.cache import cache
 
-import json
-
-# python 2.7/3.6 compatibility
+# python 2.7/3.x compatibility
 try:
     from urllib2 import urlopen
 except ImportError:
     from urllib.request import urlopen
+
+
+def get_api_data(cid, ctype='blurbs'):
+    """Obtain content data from the CMS API."""
+    key = 'livewhale_{0}_{1}'.format(ctype, cid)
+    if cache.get(key):
+        content = cache.get(key)
+    else:
+        earl = '{0}/live/{1}/{2}@JSON'.format(
+            settings.LIVEWHALE_API_URL, ctype, cid,
+        )
+        try:
+            response =  urlopen(earl)
+            data = response.read()
+            content = json.loads(data)
+            cache.set(key, content)
+        except Exception:
+            content = ''
+    return content
 
 register = template.Library()
 
@@ -24,22 +45,7 @@ class GetContent(template.Node):
         return '<LiveWhaleContent>'
 
     def render(self, context):
-        key = 'livewhale_{}_{}'.format(self.ctype,self.cid)
-        if cache.get(key):
-            content = cache.get(key)
-        else:
-            earl = '{}/live/{}/{}@JSON'.format(
-                settings.LIVEWHALE_API_URL,self.ctype,self.cid
-            )
-            try:
-                response =  urlopen(earl)
-                data = response.read()
-                content = json.loads(data)
-                cache.set(key, content)
-            except:
-                content = ''
-
-        context[self.varname] = content
+        context[self.varname] = get_api_data(self.cid, self.ctype)
         return ''
 
 
