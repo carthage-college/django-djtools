@@ -30,61 +30,62 @@ class GetProf(template.Node):
         except Exception:
             return ''
         '''
-        uname = template.Variable(self.uname).resolve(context).split('@')[0].strip()
-        key = 'livewhale_get_prof_{0}'.format(uname)
-        if cache.get(key):
-            prof = cache.get(key)
-        else:
-            root = 'https://www.carthage.edu'
-            prof = None
-            earl = '{0}/live/json/profiles/search/{1}/'.format(root, uname)
-            response = requests.get(earl)
-            '''
-            try:
-                json_data = json.loads(response.read())
-            except Exception:
-                json_data = ''
-            '''
-            #content = response.content
-            json_data = response.json()
-            if json_data:
-                email = '{0}@carthage.edu'.format(uname)
-                for profile in json_data:
-                    status = (
-                        profile.get('profiles_37') and
-                        email in profile.get('profiles_37') or
-                        (
-                            profile.get('profiles_45') and
-                            email in profile.get('profiles_45')
-                        ) or
-                        (
-                            profile.get('profiles_149') and
-                            email in profile.get('profiles_149')
-                        ) or
-                        (
-                            profile.get('profiles_80') and
-                            email in profile.get('profiles_80')
-                        )
-                    )
-                    if status:
-                        earl = '{0}/live/profiles/{1}@JSON'.format(root, profile['id'])
-                        response = requests.get(earl)
-                        profile_data = response.json()
-                        if profile_data.get('parent'):
-                            earl = '{0}/live/profiles/{1}@JSON'.format(
-                                root, profile_data['parent'],
+        prof = None
+        if self.uname:
+            uname = template.Variable(self.uname).resolve(context).split('@')[0].strip()
+            key = 'livewhale_get_prof_{0}'.format(uname)
+            if cache.get(key):
+                prof = cache.get(key)
+            else:
+                root = 'https://www.carthage.edu'
+                earl = '{0}/live/json/profiles/search/{1}/'.format(root, uname)
+                response = requests.get(earl)
+                '''
+                try:
+                    json_data = json.loads(response.read())
+                except Exception:
+                    json_data = ''
+                '''
+                #content = response.content
+                json_data = response.json()
+                if json_data:
+                    email = '{0}@carthage.edu'.format(uname)
+                    for profile in json_data:
+                        status = (
+                            profile.get('profiles_37') and
+                            email in profile.get('profiles_37') or
+                            (
+                                profile.get('profiles_45') and
+                                email in profile.get('profiles_45')
+                            ) or
+                            (
+                                profile.get('profiles_149') and
+                                email in profile.get('profiles_149')
+                            ) or
+                            (
+                                profile.get('profiles_80') and
+                                email in profile.get('profiles_80')
                             )
+                        )
+                        if status:
+                            earl = '{0}/live/profiles/{1}@JSON'.format(root, profile['id'])
                             response = requests.get(earl)
                             profile_data = response.json()
-                        if profile_data.get('thumb'):
-                            listz = profile_data['thumb'].split('/')
-                            listz[8] = '145'
-                            listz[0] = 'https:'
-                            new_listz = listz[:9]
-                            new_listz.append(listz[-1])
-                            profile['thumbnail'] = '/'.join(new_listz)
-                        prof = profile
-                        cache.set(key, prof)
+                            if profile_data.get('parent'):
+                                earl = '{0}/live/profiles/{1}@JSON'.format(
+                                    root, profile_data['parent'],
+                                )
+                                response = requests.get(earl)
+                                profile_data = response.json()
+                            if profile_data.get('thumb'):
+                                listz = profile_data['thumb'].split('/')
+                                listz[8] = '145'
+                                listz[0] = 'https:'
+                                new_listz = listz[:9]
+                                new_listz.append(listz[-1])
+                                profile['thumbnail'] = '/'.join(new_listz)
+                            prof = profile
+                            cache.set(key, prof)
 
         context[self.varname] = prof
         return ''
