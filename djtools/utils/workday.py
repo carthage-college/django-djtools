@@ -2,6 +2,7 @@
 
 import requests
 from django.conf import settings
+from django.core.cache import cache
 
 
 def department_detail(did):
@@ -47,7 +48,7 @@ def department_person(cid, choices=False):
     else:
         depts = []
     response = requests.get(
-        '{0}profile/{1}/departments/?format=json'.format(
+        '{0}profile/{1}/detail/?format=json'.format(
             settings.DIRECTORY_API_URL,
             cid,
         ),
@@ -64,32 +65,34 @@ def department_person(cid, choices=False):
     return depts
 
 
-def get_peeps(who):
+def get_peeps(who=None, choices=False):
     """Obtain the folks based on who parameter."""
-    key = 'workday_{0}_api'.format(who)
+    key = 'workday_{0}{1}_api'.format(who, choices)
     peeps = cache.get(key)
-
     if not peeps:
-
-        if who == 'facstaff':
-            where = 'faculty IS NOT NULL OR staff IS NOT NULL'
-        elif who in ['faculty','staff','student']:
-            where = '{0} IS NOT NULL'.format(who)
+        peeps = []
+        if choices:
+            peeps.append(('','---select---'))
+        if who:
+            earl = '{0}profile/{1}/who/?format=json'.format(
+                settings.DIRECTORY_API_URL,
+                who,
+            )
         else:
-            where = None
-
-        objects = xsql(sql, key=settings.INFORMIX_DEBUG)
-
-        if objects:
-            peeps = []
-            for obj in objects:
-                row = {
-                    'cid': obj[0],
-                    'lastname': obj[1],
-                    'firstname': obj[2],
-                    'email': '{0}@carthage.edu'.format(obj[3]),
-                    'username': obj[3],
-                }
+            earl = '{0}profile/?format=json'.format(
+                settings.DIRECTORY_API_URL,
+            )
+        response = requests.get(
+            earl,
+            headers={'Authorization': settings.REST_FRAMEWORK_TOKEN},
+        )
+        if response.json():
+            for peep in response.json():
+                name = '{0}, {1}'.format(peep['last_name'], peep['first_name'])
+                if choices:
+                    peeps.append((peep.id, name))
+                else:
+                    peeps.append(peep)
                 peeps.append(row)
             cache.set(key, peeps, timeout=86400)
 
