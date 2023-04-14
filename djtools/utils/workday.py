@@ -59,10 +59,11 @@ def department_person(cid, choices=False):
     )
     if response.json():
         for dept in response.json()[0]['departments']:
-            department = department_detail(dept['id'])
+            did = dept.split('/')[-2]
+            department = department_detail(did)
             if department:
                 if choices:
-                    depts.append((dept.id, dept.name))
+                    depts.append((department['id'], department['name']))
                 else:
                     depts.append(department)
     return depts
