@@ -68,22 +68,26 @@ def department_person(cid, choices=False):
     return depts
 
 
-def get_deans(cid=False):
-    """Obtain all deans or a dean."""
-    deans = []
+def get_managers(manager, cid=False):
+    """Obtain all managers."""
+    peeps = []
     response = requests.get(
-        '{0}profile/deans/?format=json'.format(
+        '{0}profile/{1}/?format=json'.format(
             settings.DIRECTORY_API_URL,
+            manager,
         ),
         headers=HEADERS,
     )
     if response.json():
-        for dean in response.json():
-            if cid and cid == dean['id']:
-                return response.json()
+        for person in response.json():
+            if cid:
+                if cid == person['id']:
+                    return person
+                else:
+                    peeps = []
             else:
-                deans.append(dean)
-    return deans
+                peeps.append(person)
+    return peeps
 
 
 def get_peep(cid):
