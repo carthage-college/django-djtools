@@ -38,7 +38,7 @@ def department_all(choices=False):
     if response.json():
         for dept in response.json():
             if choices:
-                depts.append((dept['id'], dept['name']))
+                depts.append((str(dept['id']), dept['name']))
             else:
                 depts.append(dept)
     return depts
