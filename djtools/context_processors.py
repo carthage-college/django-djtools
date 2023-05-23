@@ -16,7 +16,7 @@ def sitevars(request):
         context['debug'] = settings.DEBUG
         # UI helpers for email
         context['dl_dt'] = '''
-            style="background:#efefef; color:#000; float:left; font-weight:bold; margin-right:10px; padding:5px; width:200px;"
+            style="background:#5f9be3; color:#fff; float:left; font-weight:bold; margin-right:10px; padding:5px; width:200px;"
         '''
         context['dl_dd'] = '''
             style="margin:2px 0; padding:5px 0;"
