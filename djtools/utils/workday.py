@@ -107,6 +107,18 @@ def get_peep(cid):
     return peep
 
 
+def get_students(choices=False):
+    """Fetch all students."""
+    students = []
+    earl = '{0}student/?format=json'.format(
+        settings.DIRECTORY_API_URL,
+    )
+    response = requests.get(earl, headers=HEADERS)
+    if response.json():
+        students = response.json()
+    return students
+
+
 def get_peeps(who=None, choices=False):
     """Obtain the folks based on who parameter."""
     key = 'workday_{0}{1}_api'.format(who, choices)
