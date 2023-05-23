@@ -23,11 +23,6 @@ def in_group(user, *args):
             if g:
                 g = True
                 break
-
-    # superuser exception
-    if not g and user.is_superuser:
-        g = True
-
     return g
 
 
