@@ -57,10 +57,10 @@ def send_mail(
             email.send(fail_silently=False)
             status = True
             break
-        except Exception as e:
+        except Exception as error:
             try:
-                logger = logging.getLogger(__name__)
-                logger.debug(e)
+                logger = logging.getLogger('debug_logfile')
+                logger.debug(error)
             except:
                 pass
             count += 1
@@ -68,5 +68,4 @@ def send_mail(
                 pass
             else:
                 break
-
     return status
