@@ -24,15 +24,12 @@ class GetProf(template.Node):
 
     def render(self, context):
         """Render the template tag content."""
-        '''
         try:
             uname = template.Variable(self.uname).resolve(context).split('@')[0].strip()
         except Exception:
-            return ''
-        '''
+            uname = None
         prof = None
-        if self.uname:
-            uname = template.Variable(self.uname).resolve(context).split('@')[0].strip()
+        if uname:
             key = 'livewhale_get_prof_{0}'.format(uname)
             if cache.get(key):
                 prof = cache.get(key)
