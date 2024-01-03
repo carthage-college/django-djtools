@@ -15,10 +15,11 @@ except ImportError:
 
 def get_api_data(cid, ctype='blurbs'):
     """Obtain content data from the CMS API."""
-    key = 'livewhale_{0}_{1}'.format(ctype, cid)
-    if cache.get(key):
-        content = cache.get(key)
-    else:
+    #key = 'livewhale_{0}_{1}'.format(ctype, cid)
+    #if cache.get(key):
+        #content = cache.get(key)
+    #else:
+    if True:
         earl = '{0}/live/{1}/{2}@JSON'.format(
             settings.LIVEWHALE_API_URL, ctype, cid,
         )
@@ -26,7 +27,7 @@ def get_api_data(cid, ctype='blurbs'):
             response =  urlopen(earl)
             data = response.read()
             content = json.loads(data)
-            cache.set(key, content)
+            #cache.set(key, content)
         except Exception:
             content = ''
     return content
