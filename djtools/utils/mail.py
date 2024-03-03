@@ -42,7 +42,7 @@ def send_mail(
         rendered = t.render({'data':data,},)
 
     if not reply_to:
-        reply_to = femail
+        reply_to = [femail,]
 
     email = EmailMessage(
         subject,
