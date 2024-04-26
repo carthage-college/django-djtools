@@ -48,20 +48,19 @@ class GetProf(template.Node):
                 if json_data:
                     email = '{0}@carthage.edu'.format(uname)
                     for profile in json_data:
+                        # 33 = faculty
+                        # 71 = staff
+                        # 90 = Admissions Representatives
                         status = (
-                            profile.get('profiles_37') and
-                            email in profile.get('profiles_37') or
+                            profile.get('profiles_33') and
+                            email in profile.get('profiles_33') or
                             (
-                                profile.get('profiles_45') and
-                                email in profile.get('profiles_45')
+                                profile.get('profiles_71') and
+                                email in profile.get('profiles_71')
                             ) or
                             (
-                                profile.get('profiles_149') and
-                                email in profile.get('profiles_149')
-                            ) or
-                            (
-                                profile.get('profiles_80') and
-                                email in profile.get('profiles_80')
+                                profile.get('profiles_90') and
+                                email in profile.get('profiles_90')
                             )
                         )
                         if status:
