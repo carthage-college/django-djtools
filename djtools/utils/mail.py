@@ -20,10 +20,18 @@ def validateEmail(email):
 
 
 def send_mail(
-    request, recipients, subject, femail, template, data, bcc=None,
-    content='html', attach=False
+    request,
+    recipients,
+    subject,
+    femail,
+    template,
+    data,
+    reply_to=None,
+    bcc=None,
+    content='html',
+    attach=False,
 ):
-
+    """Send an email through django EmailMessage class."""
     if not bcc:
         bcc = [settings.MANAGERS[0][1]]
 
@@ -33,10 +41,16 @@ def send_mail(
     else:
         rendered = t.render({'data':data,},)
 
-    headers = {'Reply-To': femail,'From': femail,}
+    if not reply_to:
+        reply_to = [femail,]
 
     email = EmailMessage(
-        subject, rendered, femail, recipients, bcc, headers=headers
+        subject,
+        rendered,
+        femail,
+        recipients,
+        bcc,
+        reply_to=reply_to,
     )
 
     email.encoding = 'utf-8'
