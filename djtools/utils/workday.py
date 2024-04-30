@@ -91,14 +91,16 @@ def get_managers(manager, cid=False):
     return peeps
 
 
-def get_peep(cid, ptype='profile'):
+def get_peep(cid, profile=None):
     """Obtain the profile based on ID."""
     key = 'workday_{0}_api'.format(cid)
     peep = cache.get(key)
+    if not profile:
+        profile = 'profile'
     if not peep:
         earl = '{0}{1}/{2}/detail/?format=json'.format(
             settings.DIRECTORY_API_URL,
-            ptype,
+            profile,
             cid,
         )
         response = requests.get(earl, headers=HEADERS)
