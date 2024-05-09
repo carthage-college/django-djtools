@@ -12,7 +12,7 @@ from djtools.utils.mail import send_mail
 
 def main():
     """test sendmail with gmail API"""
-    frum = settings.PERMIT_EMAIL
+    frum = settings.DEFAULT_FROM_EMAIL
     print(frum)
     send_mail(
         None,
