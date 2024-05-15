@@ -17,7 +17,7 @@ def main():
     send_mail(
         None,
         [settings.MANAGERS[0][1]],
-        '[DJ Parking] email test',
+        '[DJ Tools] email test',
         frum,
         'email_test.html',
         {'test': 'boo!'},
