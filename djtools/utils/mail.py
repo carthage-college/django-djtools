@@ -59,7 +59,7 @@ def send_mail(
     if attach:
         try:
             email.attach_file(attach)
-        except:
+        except Exception as error:
             for field, value in request.FILES.items():
                 email.attach(value.name, value.read(), value.content_type)
 
