@@ -63,23 +63,5 @@ def send_mail(
             for field, value in request.FILES.items():
                 email.attach(value.name, value.read(), value.content_type)
 
-    status = False
-    # try 5 times then quit
-    count = 0
-    while True:
-        try:
-            email.send(fail_silently=False)
-            status = True
-            break
-        except Exception as error:
-            try:
-                logger = logging.getLogger('debug_logfile')
-                logger.debug(error)
-            except:
-                pass
-            count += 1
-            if count < 5:
-                pass
-            else:
-                break
-    return status
+    email.send(fail_silently=True)
+    return True
