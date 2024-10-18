@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 
+import datetime
 import requests
 from django.conf import settings
 from django.core.cache import cache
+from djtools.utils.date import calculate_age
 
 
 HEADERS = {'Authorization': 'Token {0}'.format(settings.REST_FRAMEWORK_TOKEN)}
@@ -108,6 +110,68 @@ def get_peep(cid, profile=None):
             peep = response.json()
             cache.set(key, peep, timeout=86400)
     return peep
+
+
+def get_student(peep):
+    """Construct a student's profile object from API data."""
+    student = None
+    if peep:
+        cid = peep['Student_ID']
+        adult = False
+        privacy = False
+        incoming = False
+        birth_date = peep.get('Date_of_Birth')
+        residency = peep.get('housingType')
+        is_incoming = peep.get('Is_Incoming')
+        privacy_block = peep.get('Privacy_Block')
+        if privacy_block == '1':
+            privacy = True
+        if is_incoming == 'T':
+            incoming = True
+        if residency:
+            residency = residency[0]
+        if birth_date:
+            birth_date = datetime.datetime.strptime(birth_date, '%Y-%m-%d')
+            age = calculate_age(birth_date)
+            if age >= settings.ADULT_AGE:
+                adult = True
+        # obtain preferred name from Student attribute
+        alt_name = ''
+        full_name = peep.get('Student')
+        first_name = peep.get('firstName')
+        if full_name:
+            preferred_name = full_name.split(' ')[0]
+            if preferred_name != first_name:
+                alt_name = preferred_name
+        student = {
+            'id': cid,
+            'first_name': first_name,
+            'last_name': peep.get('lastName'),
+            'alt_name': alt_name,
+            'email': peep['LRV_Student_Primary_Institutional_Email_Text'],
+            'second_name': peep.get('Middle_Name'),
+            'suffix': peep.get('Suffix'),
+            'birth_date': birth_date,
+            'address1': peep.get('LRV_Student_Primary_Address_Line_1'),
+            'city': peep.get('Primary_Home_Address_-_City'),
+            'state': peep.get('Primary_Home_Address_-_State'),
+            'postal_code': peep.get('LRV_Student_Primary_Address_Zip'),
+            'country': peep.get('LRV_Student_Primary_Address_Country'),
+            'gender': peep.get('Legal_Sex'),
+            'class_year': peep.get('Latest_Class_Standing'),
+            'residency': residency,
+            'adult': adult,
+            'incoming': incoming,
+            'privacy':  privacy,
+            'Primary_Major': peep.get('Primary_Major'),
+            'Second_Major': peep.get('Second_Major'),
+            'Third_Major': peep.get('Third_Major'),
+            'Minor_One': peep.get('Minor_One'),
+            'Minor_Two': peep.get('Minor_Two'),
+            'Minor_Three': peep.get('Minor_Three'),
+        }
+
+    return student
 
 
 def get_students(choices=False):
